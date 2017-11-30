@@ -55,6 +55,11 @@ public class MnistFileHelper
 		System.out.println( numberOfItems + " labels" );
 	}
 
+	public int getNumberOfItems()
+	{
+		return (int) numberOfItems;
+	}
+
 	public boolean hasNext()
 	{
 		return currentIndex <= numberOfItems;

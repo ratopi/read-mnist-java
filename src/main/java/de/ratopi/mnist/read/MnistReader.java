@@ -42,6 +42,16 @@ public class MnistReader
 	{
 		this.mnistLabelProvider = mnistLabelProvider;
 		this.mnistImageProvider = mnistImageProvider;
+
+		if ( mnistLabelProvider.getNumberOfItems() != mnistImageProvider.getNumberOfItems() )
+		{
+			throw new RuntimeException( "The count of items differs" );
+		}
+	}
+
+	public int getNumberOfItems()
+	{
+		return this.mnistImageProvider.getNumberOfItems();
 	}
 
 	public void handleAllRemaining( final BufferedImageHandler imageHandler ) throws IOException
@@ -58,7 +68,7 @@ public class MnistReader
 		}
 	}
 
-	public void handleAllRemaining( final DoubleArrayImageHandler imageHandler ) throws IOException
+	public void handleAllRemaining( final DataArrayImageHandler imageHandler ) throws IOException
 	{
 		while ( mnistImageProvider.hasNext() && mnistImageProvider.hasNext() )
 		{
@@ -78,7 +88,7 @@ public class MnistReader
 		void handle( long index, final BufferedImage image, final byte item );
 	}
 
-	public interface DoubleArrayImageHandler
+	public interface DataArrayImageHandler
 	{
 		void handle( long index, byte[] data, final byte item );
 	}
