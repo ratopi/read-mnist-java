@@ -44,19 +44,43 @@ public class MnistReader
 		this.mnistImageProvider = mnistImageProvider;
 	}
 
-	public void handleAllRemaining( final Handler handler ) throws IOException
+	public void handleAllRemaining( final BufferedImageHandler imageHandler ) throws IOException
 	{
 		while ( mnistImageProvider.hasNext() && mnistImageProvider.hasNext() )
 		{
-			final BufferedImage image = mnistImageProvider.nextImage();
-			final int item = mnistLabelProvider.nextItem();
-			handler.handle( mnistImageProvider.currentIndex(), image, item );
+			mnistImageProvider.selectNext();
+			mnistLabelProvider.selectNext();
+
+			final BufferedImage image = mnistImageProvider.getCurrentImage();
+			final byte item = mnistLabelProvider.getCurrentValue();
+
+			imageHandler.handle( mnistImageProvider.currentIndex(), image, item );
 		}
 	}
 
-	public interface Handler
+	public void handleAllRemaining( final DoubleArrayImageHandler imageHandler ) throws IOException
 	{
-		public void handle( long index, final BufferedImage image, final int item );
+		while ( mnistImageProvider.hasNext() && mnistImageProvider.hasNext() )
+		{
+			mnistImageProvider.selectNext();
+			mnistLabelProvider.selectNext();
+
+			final byte[] data = mnistImageProvider.getCurrentData();
+			final byte item = mnistLabelProvider.getCurrentValue();
+
+			imageHandler.handle( mnistImageProvider.currentIndex(), data, item );
+		}
+	}
+
+
+	public interface BufferedImageHandler
+	{
+		void handle( long index, final BufferedImage image, final byte item );
+	}
+
+	public interface DoubleArrayImageHandler
+	{
+		void handle( long index, byte[] data, final byte item );
 	}
 
 }

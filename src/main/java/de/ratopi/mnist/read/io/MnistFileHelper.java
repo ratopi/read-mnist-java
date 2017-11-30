@@ -34,7 +34,7 @@ public class MnistFileHelper
 	private final InputStream inputStream;
 
 	private final long numberOfItems;
-	private long currentItem = -1;
+	private long currentIndex = -1;
 
 	public MnistFileHelper( final File mnistFile, final long magic ) throws IOException
 	{
@@ -57,17 +57,17 @@ public class MnistFileHelper
 
 	public boolean hasNext()
 	{
-		return currentItem <= numberOfItems;
+		return currentIndex <= numberOfItems;
 	}
 
 	public long currentIndex()
 	{
-		return currentItem;
+		return currentIndex;
 	}
 
-	protected void incrementItemCounter()
+	protected void incrementCurrentIndex()
 	{
-		currentItem++;
+		currentIndex++;
 	}
 
 	protected int readUnsigned32() throws IOException

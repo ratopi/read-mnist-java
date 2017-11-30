@@ -1,8 +1,5 @@
 package de.ratopi.mnist.read.io;
 
-import de.ratopi.mnist.read.io.MnistImageProvider;
-import de.ratopi.mnist.read.io.MnistLabelProvider;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -20,9 +17,12 @@ public class Test
 		int i = 0;
 		while ( true )
 		{
-			final int item = mnistLabelProvider.nextItem();
+			mnistLabelProvider.selectNext();
+			mnistImageProvider.selectNext();
+
+			final byte item = mnistLabelProvider.getCurrentValue();
 			System.out.println( i + " is a " + item );
-			final BufferedImage image = mnistImageProvider.nextImage();
+			final BufferedImage image = mnistImageProvider.getCurrentImage();
 			ImageIO.write( image, "png", new File( "output/image" + item + "." + i + ".png" ) );
 			i++;
 			if ( i > 99 ) System.exit( 0 );

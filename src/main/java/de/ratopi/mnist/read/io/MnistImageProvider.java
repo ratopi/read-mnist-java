@@ -30,6 +30,7 @@ public class MnistImageProvider extends MnistFileHelper
 	private int numberOfImages;
 	private int imageWidth;
 	private int imageHeight;
+	private byte[] currentData;
 
 	public MnistImageProvider( final File mnistImageFile ) throws IOException
 	{
@@ -41,23 +42,33 @@ public class MnistImageProvider extends MnistFileHelper
 		System.out.println( numberOfImages + " images with " + imageWidth + "x" + imageHeight + " pixels" );
 	}
 
-	public BufferedImage nextImage() throws IOException
+	public void selectNext() throws IOException
+	{
+		currentData = readData( new byte[imageWidth * imageHeight] );
+
+		incrementCurrentIndex();
+	}
+
+	public byte[] getCurrentData()
+	{
+		return currentData;
+	}
+
+	public BufferedImage getCurrentImage() throws IOException
 	{
 		final BufferedImage image = new BufferedImage( imageWidth, imageHeight, BufferedImage.TYPE_BYTE_GRAY );
 
+		int index = 0;
 		for ( int y = 0; y < imageHeight; y++ )
 		{
-			final byte[] rowData = readData( new byte[imageWidth] );
-
-			for ( int x = 0; x < rowData.length; x++ )
+			for ( int x = 0; x < imageWidth; x++, index++ )
 			{
-				int gray = 255 - ( ( (int) rowData[x] ) & 0xFF );
+				final byte data = currentData[index];
+				int gray = 255 - ( ( (int) data ) & 0xFF );
 				int rgb = gray | ( gray << 8 ) | ( gray << 16 );
 				image.setRGB( x, y, rgb );
 			}
 		}
-
-		incrementItemCounter();
 
 		return image;
 	}

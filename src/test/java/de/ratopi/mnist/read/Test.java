@@ -17,10 +17,10 @@ public class Test
 		);
 
 		mnistReader.handleAllRemaining(
-				new MnistReader.Handler()
+				new MnistReader.BufferedImageHandler()
 				{
 					@Override
-					public void handle( long index, BufferedImage image, int item )
+					public void handle( long index, BufferedImage image, byte item )
 					{
 						System.out.println( index );
 						try
