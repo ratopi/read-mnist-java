@@ -7,7 +7,7 @@
 
     <groupId>de.ratopi</groupId>
     <artifactId>read-mnist</artifactId>
-    <version>1</version>
+    <version>1.1-SNAPSHOT</version>
 
     <description>Read MNIST data files</description>
 
