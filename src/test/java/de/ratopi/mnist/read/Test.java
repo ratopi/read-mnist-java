@@ -1,9 +1,9 @@
 package de.ratopi.mnist.read;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import javax.imageio.ImageIO;
 
 public class Test
 {
@@ -22,7 +22,7 @@ public class Test
 					@Override
 					public void handle( long index, BufferedImage image, byte item )
 					{
-						System.out.println( index );
+						if (index % 1000 == 0) System.out.println( index );
 						try
 						{
 							ImageIO.write( image, "png", new File( "output/image." + item + "." + index + ".png" ) );
@@ -32,7 +32,9 @@ public class Test
 							throw new RuntimeException( e );
 						}
 					}
-				}
+			}
 		);
+
+		mnistReader.close();
 	}
 }

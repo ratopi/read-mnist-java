@@ -21,12 +21,12 @@ SOFTWARE.
  */
 package de.ratopi.mnist.read;
 
-import de.ratopi.mnist.read.io.MnistImageProvider;
-import de.ratopi.mnist.read.io.MnistLabelProvider;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
+import de.ratopi.mnist.read.io.MnistImageProvider;
+import de.ratopi.mnist.read.io.MnistLabelProvider;
 
 public class MnistReader
 {
@@ -49,6 +49,12 @@ public class MnistReader
 		}
 	}
 
+	public void close() throws IOException
+	{
+		this.mnistLabelProvider.close();
+		this.mnistImageProvider.close();
+	}
+
 	public int getNumberOfItems()
 	{
 		return this.mnistImageProvider.getNumberOfItems();
@@ -66,6 +72,9 @@ public class MnistReader
 
 			imageHandler.handle( mnistImageProvider.currentIndex(), image, item );
 		}
+
+		mnistLabelProvider.close();
+		mnistImageProvider.close();
 	}
 
 	public void handleAllRemaining( final DataArrayImageHandler imageHandler ) throws IOException
@@ -80,6 +89,9 @@ public class MnistReader
 
 			imageHandler.handle( mnistImageProvider.currentIndex(), data, item );
 		}
+
+		mnistLabelProvider.close();
+		mnistImageProvider.close();
 	}
 
 

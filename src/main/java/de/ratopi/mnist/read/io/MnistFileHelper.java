@@ -29,8 +29,6 @@ import java.util.zip.GZIPInputStream;
 
 public class MnistFileHelper
 {
-	private final long magic;
-	private final File mnistFile;
 	private final InputStream inputStream;
 
 	private final long numberOfItems;
@@ -38,9 +36,6 @@ public class MnistFileHelper
 
 	public MnistFileHelper( final File mnistFile, final long magic ) throws IOException
 	{
-		this.mnistFile = mnistFile;
-		this.magic = magic;
-
 		if ( mnistFile.getName().endsWith( ".gz" ) )
 		{
 			this.inputStream = new GZIPInputStream( new FileInputStream( mnistFile ) );
@@ -55,6 +50,11 @@ public class MnistFileHelper
 		System.out.println( numberOfItems + " labels" );
 	}
 
+	public void close() throws IOException
+	{
+		inputStream.close();
+	}
+
 	public int getNumberOfItems()
 	{
 		return (int) numberOfItems;
@@ -62,7 +62,7 @@ public class MnistFileHelper
 
 	public boolean hasNext()
 	{
-		return currentIndex <= numberOfItems;
+		return currentIndex + 1 < numberOfItems;
 	}
 
 	public long currentIndex()
@@ -77,7 +77,7 @@ public class MnistFileHelper
 
 	protected int readUnsigned32() throws IOException
 	{
-		final byte[] buffy = readData( new byte[4] );
+		final byte[] buffy = readData( new byte[ 4 ] );
 
 		long n = 0;
 		int shift = 24;
@@ -96,7 +96,12 @@ public class MnistFileHelper
 		int n = 0;
 		do
 		{
-			n += inputStream.read( data, n, data.length - n );
+			final int len = inputStream.read( data, n, data.length - n );
+			if ( len < 1 )
+			{
+				throw new IOException( "no more data" );
+			}
+			n += len;
 		}
 		while ( n < data.length );
 

@@ -44,7 +44,12 @@ public class MnistImageProvider extends MnistFileHelper
 
 	public void selectNext() throws IOException
 	{
-		currentData = readData( new byte[imageWidth * imageHeight] );
+		if ( !hasNext() )
+		{
+			throw new IOException( "No more data" );
+		}
+
+		currentData = readData( new byte[ imageWidth * imageHeight ] );
 
 		incrementCurrentIndex();
 	}
@@ -63,7 +68,7 @@ public class MnistImageProvider extends MnistFileHelper
 		{
 			for ( int x = 0; x < imageWidth; x++, index++ )
 			{
-				final byte data = currentData[index];
+				final byte data = currentData[ index ];
 				int gray = 255 - ( ( (int) data ) & 0xFF );
 				int rgb = gray | ( gray << 8 ) | ( gray << 16 );
 				image.setRGB( x, y, rgb );
