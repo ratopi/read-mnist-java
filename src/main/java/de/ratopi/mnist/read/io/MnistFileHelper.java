@@ -46,8 +46,8 @@ public class MnistFileHelper
 		}
 
 		if ( readUnsigned32() != magic ) throw new IOException( "Header is not correct" );
+
 		numberOfItems = readUnsigned32();
-		System.out.println( numberOfItems + " labels" );
 	}
 
 	public void close() throws IOException
@@ -75,7 +75,7 @@ public class MnistFileHelper
 		currentIndex++;
 	}
 
-	protected int readUnsigned32() throws IOException
+	protected long readUnsigned32() throws IOException
 	{
 		final byte[] buffy = readData( new byte[ 4 ] );
 
@@ -83,12 +83,12 @@ public class MnistFileHelper
 		int shift = 24;
 		for ( byte b : buffy )
 		{
-			n = n + ( b << shift );
-			// System.out.println(b);
+			final long v = ( ( (long) b ) & 0xFF ) << shift;
+			n = n + v;
 			shift -= 8;
 		}
 
-		return (int) n;
+		return n;
 	}
 
 	protected byte[] readData( final byte[] data ) throws IOException

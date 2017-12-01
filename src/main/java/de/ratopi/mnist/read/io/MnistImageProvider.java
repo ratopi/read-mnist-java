@@ -27,7 +27,6 @@ import java.io.IOException;
 
 public class MnistImageProvider extends MnistFileHelper
 {
-	private int numberOfImages;
 	private int imageWidth;
 	private int imageHeight;
 	private byte[] currentData;
@@ -36,10 +35,10 @@ public class MnistImageProvider extends MnistFileHelper
 	{
 		super( mnistImageFile, 2051 );
 
-		imageHeight = readUnsigned32();
-		imageWidth = readUnsigned32();
+		imageHeight = (int) readUnsigned32();
+		imageWidth = (int) readUnsigned32();
 
-		System.out.println( numberOfImages + " images with " + imageWidth + "x" + imageHeight + " pixels" );
+		System.out.println( mnistImageFile.getName() + " contains " + getNumberOfItems() + " images with " + imageWidth + "x" + imageHeight + " pixels" );
 	}
 
 	public void selectNext() throws IOException

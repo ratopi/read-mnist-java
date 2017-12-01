@@ -26,19 +26,19 @@ import java.io.IOException;
 
 public class MnistLabelProvider extends MnistFileHelper
 {
-	private int numberOfItems;
 	private byte currentValue;
 
 	public MnistLabelProvider( final File mnistLabelFile ) throws IOException
 	{
 		super( mnistLabelFile, 2049 );
+		System.out.println( mnistLabelFile.getName() + " contains " + getNumberOfItems() + " labels" );
 	}
 
 	public void selectNext() throws IOException
 	{
 		incrementCurrentIndex();
-		final byte[] buffy = readData( new byte[1] );
-		currentValue = buffy[0];
+		final byte[] buffy = readData( new byte[ 1 ] );
+		currentValue = buffy[ 0 ];
 	}
 
 	public byte getCurrentValue()
