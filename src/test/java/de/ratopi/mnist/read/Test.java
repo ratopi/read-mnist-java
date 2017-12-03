@@ -1,9 +1,9 @@
 package de.ratopi.mnist.read;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 
 public class Test
 {
@@ -22,14 +22,16 @@ public class Test
 		if ( !outputDir.isDirectory() && !outputDir.mkdirs() ) throw new IOException( "Could not create outputdirectory" );
 
 		mnistReader.handleAllRemaining(
-				new MnistReader.BufferedImageHandler()
+				new MnistReader.DataArrayImageHandler()
 				{
 					@Override
-					public void handle( long index, BufferedImage image, byte item )
+					public void handle( final long index, final byte[] data, final byte item )
 					{
 						if ( index % 1000 == 0 ) System.out.println( index );
 						try
 						{
+							final BufferedImage image = mnistReader.getDataAsBufferedImage( data );
+
 							ImageIO.write( image, "png", new File( outputDir.getPath() + "/" + prefix + "." + item + "." + index + ".png" ) );
 						}
 						catch ( IOException e )

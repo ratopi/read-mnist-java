@@ -41,6 +41,16 @@ public class MnistImageProvider extends MnistFileHelper
 		System.out.println( mnistImageFile.getName() + " contains " + getNumberOfItems() + " images with " + imageWidth + "x" + imageHeight + " pixels" );
 	}
 
+	public int getImageWidth()
+	{
+		return imageWidth;
+	}
+
+	public int getImageHeight()
+	{
+		return imageHeight;
+	}
+
 	public void selectNext() throws IOException
 	{
 		if ( !hasNext() )
@@ -58,7 +68,7 @@ public class MnistImageProvider extends MnistFileHelper
 		return currentData;
 	}
 
-	public BufferedImage getCurrentImage() throws IOException
+	public BufferedImage getDataAsBufferedImage( final byte[] values )
 	{
 		final BufferedImage image = new BufferedImage( imageWidth, imageHeight, BufferedImage.TYPE_BYTE_GRAY );
 
@@ -67,7 +77,7 @@ public class MnistImageProvider extends MnistFileHelper
 		{
 			for ( int x = 0; x < imageWidth; x++, index++ )
 			{
-				final byte data = currentData[ index ];
+				final byte data = values[ index ];
 				int gray = 255 - ( ( (int) data ) & 0xFF );
 				int rgb = gray | ( gray << 8 ) | ( gray << 16 );
 				image.setRGB( x, y, rgb );

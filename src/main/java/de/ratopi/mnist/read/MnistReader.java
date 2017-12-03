@@ -21,12 +21,12 @@ SOFTWARE.
  */
 package de.ratopi.mnist.read;
 
+import de.ratopi.mnist.read.io.MnistImageProvider;
+import de.ratopi.mnist.read.io.MnistLabelProvider;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
-import de.ratopi.mnist.read.io.MnistImageProvider;
-import de.ratopi.mnist.read.io.MnistLabelProvider;
 
 public class MnistReader
 {
@@ -60,45 +60,37 @@ public class MnistReader
 		return this.mnistImageProvider.getNumberOfItems();
 	}
 
-	public void handleAllRemaining( final BufferedImageHandler imageHandler ) throws IOException
+	public BufferedImage getDataAsBufferedImage( final byte[] values )
 	{
-		while ( mnistImageProvider.hasNext() && mnistImageProvider.hasNext() )
+		return mnistImageProvider.getDataAsBufferedImage( values );
+	}
+
+	public int handleAllRemaining( final DataArrayImageHandler imageHandler ) throws IOException
+	{
+		return handleSome( Integer.MAX_VALUE, imageHandler );
+	}
+
+	public int handleSome( final int countToHandle, final DataArrayImageHandler imageHandler ) throws IOException
+	{
+		int handledCount = 0;
+		while ( handledCount < countToHandle && mnistImageProvider.hasNext() && mnistImageProvider.hasNext() )
 		{
 			mnistImageProvider.selectNext();
 			mnistLabelProvider.selectNext();
 
-			final BufferedImage image = mnistImageProvider.getCurrentImage();
 			final byte item = mnistLabelProvider.getCurrentValue();
+			imageHandler.handle( mnistImageProvider.currentIndex(), mnistImageProvider.getCurrentData(), item );
 
-			imageHandler.handle( mnistImageProvider.currentIndex(), image, item );
+			handledCount++;
 		}
 
 		mnistLabelProvider.close();
 		mnistImageProvider.close();
+
+		return handledCount;
 	}
 
-	public void handleAllRemaining( final DataArrayImageHandler imageHandler ) throws IOException
-	{
-		while ( mnistImageProvider.hasNext() && mnistImageProvider.hasNext() )
-		{
-			mnistImageProvider.selectNext();
-			mnistLabelProvider.selectNext();
-
-			final byte[] data = mnistImageProvider.getCurrentData();
-			final byte item = mnistLabelProvider.getCurrentValue();
-
-			imageHandler.handle( mnistImageProvider.currentIndex(), data, item );
-		}
-
-		mnistLabelProvider.close();
-		mnistImageProvider.close();
-	}
-
-
-	public interface BufferedImageHandler
-	{
-		void handle( long index, final BufferedImage image, final byte item );
-	}
+	// === public interfaces ===
 
 	public interface DataArrayImageHandler
 	{
